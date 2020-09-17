@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<style>
+    #content {
+        width: 100px;
+        min-height: 100px;
+        margin: 20px auto;
+        border-style: ridge;
+        border-color: #567498;
+        border-spacing: 10px;
+        position: relative;
+        background: #000;
+    }
+    
+    #content:after {
+        content: '';
+        position: absolute;
+        top: -15px;
+        left: -15px;
+        right: -15px;
+        bottom: -15px;
+        border: red 2px solid;
+    }
+    
+    textarea {
+        height: 10px;
+        background-color: lightgray;
+        border: 2px solid green;
+    }
+    
+    #overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 2;
+        cursor: pointer;
+    }
+    
+    #text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 20px;
+        color: Black;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        border: 1px solid red;
+        border-spacing: 30px;
+        border-collapse: separate;
+    }
+    
+    div .noteDiv {
+        width: 40%;
+        height: 150px;
+        color: Black;
+        border: 1px solid blue;
+        text-align: center;
+        border: 3px solid green;
+    }
+    
+    h2 {
+        color: #8b0000;
+    }
+    
+    span {
+        float: right;
+        cursor: pointer;
+        border: 0.5px solid red;
+    }
+    
+    .button {
+        padding: 15px 25px;
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
+        outline: none;
+        color: #ff;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 9px #999;
+    }
+    
+    .button:hover {
+        background-color: #3e8e41
+    }
+    
+    .button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+</style>
+
+<body>
+
+    <h2> Note Making App </h2>
+
+
+    <div id="overlay" onclick="off()">
+        <div id="text"> Overlay Text</div>
+    </div>
+
+    <div id="noteRegion">
+        <h3> Title </h3>
+        <br>
+        <textarea id='head' style='height:35px;width:170px'></textarea>
+        <h3> Body </h3>
+        <textarea id='body' style='height:100px;width:170px'></textarea>
+    </div>
+
+    <br>
+    <button type='submit' class='button' onclick="addNote()"> Add Note </button>
+
+    <div id='textArea'>
+        <br>
+        <br>
+        <hr>
+    </div>
+
+    <script>
+        var id = 1;
+
+        function getNoteObject(id, titleRegion, bodyRegion) {
+            var toPutTitle = titleRegion.value.substr(0, 30);
+            var toPutBody = bodyRegion.value.substr(0, 10);
+            if (toPutTitle.length < titleRegion.value.length) {
+                toPutTitle += '...';
+            }
+            if (toPutBody.length < bodyRegion.value.length) {
+                toPutBody += '...';
+            }
+            var note = "<div class = \"noteDiv\">" +
+                "<span id='close' onclick='this.parentNode.parentNode.removeChild(this.parentNode); return false;'>X</span>" +
+                "<p><b> " + toPutTitle + "</p></p>" +
+                "<p><i>" + toPutBody + "</i></p> <br>" +
+                "<button  style = \"color:green\" class = '" + id + "'" + "onclick = on(this.className[0])> Show Full </button>" +
+                "<textarea style =\"display:none;\" class='" + id + "'" + ">" + bodyRegion.value + "</textarea> " +
+
+                "<br><br></div>";
+            return note;
+        }
+
+        function on(obj) {
+            var textArea = document.getElementsByClassName(obj)[1];
+            var text = document.getElementById('text');
+            text.innerHTML = textArea.value;
+
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function off() {
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        function addNote() {
+            try {
+                var titleRegion = document.getElementById('head');
+                var bodyRegion = document.getElementById('body');
+                if (titleRegion.value == '') {
+                    alert('either title or body is incomplete');
+                    return;
+                } else if (bodyRegion.value == "") {
+                    alert('either title or body is incomplete');
+                    return;
+                }
+
+                var newNote = getNoteObject(id, titleRegion, bodyRegion);
+                document.getElementById("textArea").innerHTML += newNote;
+                id += 1;
+                document.getElementById('head').value = '';
+                document.getElementById('body').value = '';
+            } catch {
+                document.write(err);
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
